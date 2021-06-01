@@ -21,19 +21,24 @@ function hourColor() {
 
     hourslot.forEach((element) =>{
 
-        var taskHour = parseInt(element.getAttribute("id").split("")[1]);
+        var taskHour = parseInt(element.getAttribute("id"));
+        console.log(element.getAttribute("id"))
 
-        if (taskHour === thisHour) {
-            element.classList.add("present")
+
+
+        if (taskHour > thisHour){
+           
+            element.classList.remove("present")
+            element.classList.remove("past")
+            element.classList.add("future")
+           
         }
         else if (taskHour < thisHour) {
             element.classList.remove("present")
             element.classList.add("past")
         }
-        else {
-            element.classList.remove("present")
-            element.classList.remove("past")
-            element.classList.add("future")
+        else if  (taskHour === thisHour) {
+            element.classList.add("present")
         }
     });
 }
