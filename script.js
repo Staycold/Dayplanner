@@ -1,59 +1,74 @@
-// This is the time displayed in the header.
-var datetime = null,
-    date = null;
 
-var update = function () {
-    date = moment(new Date())
-    datetime.html(date.format('dddd, MMMM Do YYYY, h:mm:ss a'));
+    var dateAndTime = null
+    var date = null;
+
+var getDate = function () {
+    date = moment()
+    dateAndTime.html(date.format('dddd, MMMM Do YYYY, h:mm:ss a'));
 };
 
 $(document).ready(function(){
-    datetime = $('#currentDay')
-    update();
-    setInterval(update,1000);
+    dateAndTime = $('#currentDay')
+    getDate();
+    setInterval(getDate,1000);
 });
 
 
-var time = moment();
 
-function dayScheduler() {
-    thisHour = time.hours();
-    $(".timeSlot").each(function () {
-        var workHour = parseInt($(this).attr("id"));
-        if (workHour > thisHour) {
-            $(this).addClass("future")
+function hourColor() {
+    var thisHour = moment().hours();
+    var hourslot = document.querySelectorAll(".hourSlot")
+
+    hourslot.forEach((element) =>{
+
+        var taskHour = parseInt(element.getAttribute("id").split("")[1]);
+
+        if (taskHour === thisHour) {
+            element.classList.add("present")
         }
-        else if (workHour === thisHour) {
-            $(this).addClass("present");
+        else if (taskHour < thisHour) {
+            element.classList.remove("present")
+            element.classList.add("past")
         }
         else {
-            $(this).addClass("past");
-        }
-    })
-}
-dayScheduler();
-
-// this is the fuction that saves what was written
-function save() {
-    $(".timeSlot").each(function () {
-        var id = $(this).attr("id");
-        var schedule = localStorage.getItem(id);
-        if (schedule !== null) {
-            $(this).children(".schedule").val(schedule);
+            element.classList.remove("present")
+            element.classList.remove("past")
+            element.classList.add("future")
         }
     });
 }
-save();
+hourColor();
+
+// this is the fuction that saves what was written
+function loadTask() {
+
+    var textareas=document.querySelectorAll(".hourSlot")
+    textareas.forEach((element) => {
+    
+        var textarea=element.children[1]
+        var hourslot = element.id
+        
+        var task = localStorage.getItem(hourslot);
+
+        textarea.textContent=task
+        
+    });
+}
+
+loadTask();
 
 
+var button = document.querySelectorAll(".button");
+button.forEach((element) =>
+element.addEventListener("click", function () {
 
+    var task = element.previousElementSibling.value;
+    var hour = element.parentElement.getAttribute("id");
 
-var saveBtn = $(".saveBtn");
-saveBtn.on("click", function () {
+    console.log(hour)
+    console.log(task)
 
-    var time = $(this).parent().attr("id");
-    var schedule = $(this).siblings(".schedule").val();
+    localStorage.setItem(hour, task);
 
-    localStorage.setItem(time, schedule);
+}));
 
-});
