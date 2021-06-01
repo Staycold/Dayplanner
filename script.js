@@ -39,7 +39,7 @@ function hourColor() {
 }
 hourColor();
 
-// this is the fuction that saves what was written
+
 function loadTask() {
 
     var textareas=document.querySelectorAll(".hourSlot")
